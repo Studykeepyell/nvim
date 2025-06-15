@@ -59,4 +59,5 @@ require("lazy").setup({
 	require("plugins.misc"),
 	require("plugins.ui"),
 	require("plugins.cursor"),
+	require("plugins.trouble"),
 })
