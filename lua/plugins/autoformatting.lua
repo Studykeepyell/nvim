@@ -21,7 +21,16 @@ return {
 
 				-- ✨ add these for C / C++
 				"clang-format", -- ← auto-formatter
-				"cpplint", -- optional: Google-style linter
+				"shellcheck",
+				"actionlint",
+				"jsonlint",
+				"yamllint",
+				"markdownlint",
+				"htmlhint",
+
+				"mypy",
+				"pylint",
+				"clang-tidy",
 			},
 			automatic_installation = true,
 		})
@@ -39,6 +48,12 @@ return {
 			formatting.terraform_fmt,
 			require("none-ls.formatting.ruff").with({ extra_args = { "--extend-select", "I" } }),
 			require("none-ls.formatting.ruff_format"),
+			diagnostics.shellcheck,
+			diagnostics.actionlint,
+			diagnostics.yamllint,
+			diagnostics.markdownlint,
+			diagnostics.mypy,
+			diagnostics.pylint,
 		}
 
 		local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
@@ -59,5 +74,22 @@ return {
 				end
 			end,
 		})
+		vim.diagnostic.config({
+			virtual_text = {
+				prefix = "●", -- You can use ">>", "→", or "" for no symbol
+				spacing = 2,
+				source = "always",
+			},
+			signs = true,
+			underline = true,
+			update_in_insert = false,
+			severity_sort = true,
+		})
+
+		-- Show diagnostic message in a floating window on hover
+		vim.o.updatetime = 250
+		vim.cmd([[
+  autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false, border = "rounded", source = "always" })
+]])
 	end,
 }
