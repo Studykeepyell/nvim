@@ -86,7 +86,7 @@ return {
 		})
 
 		-- Show diagnostic message in a floating window on hover
-		vim.o.updatetime = 250
+		vim.o.updatetime = 20000
 		vim.cmd([[
   autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false, border = "rounded", source = "always" })
 ]])
