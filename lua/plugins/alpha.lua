@@ -19,6 +19,14 @@ return {
 			[[                                                    ]],
 		}
 
+		-- Set a single highlight group for all lines
+		dashboard.section.header.opts = {
+			hl = "AlphaHeader",
+		}
+
+		-- Define the highlight group
+		vim.api.nvim_set_hl(0, "AlphaHeader", { fg = "#bd93f9", bold = true })
+
 		alpha.setup(dashboard.opts)
 	end,
 }

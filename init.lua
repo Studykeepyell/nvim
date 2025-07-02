@@ -1,6 +1,5 @@
 require("core.options")
 require("core.keymaps")
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -60,4 +59,13 @@ require("lazy").setup({
 	require("plugins.ui"),
 	require("plugins.cursor"),
 	require("plugins.trouble"),
+	require("plugins.overseer"),
+})
+
+-- after your `require("lazy").setup({ … })`:
+vim.api.nvim_create_autocmd("BufWritePost", {
+	pattern = { "*.sh", "*.py", "*.go", "*.c", "*.cpp", "*.hpp", "*.java", "*.ts" },
+	callback = function()
+		require("overseer").run_template({ template = "run script" })
+	end,
 })
