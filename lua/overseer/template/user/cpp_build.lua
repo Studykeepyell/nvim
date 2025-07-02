@@ -18,7 +18,6 @@ return {
 					"open_output",
 					direction = "vertical",
 					on_start = "always",
-					--	on_complete = "always",
 					focus = false,
 				},
 				"default",

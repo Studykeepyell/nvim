@@ -61,11 +61,3 @@ require("lazy").setup({
 	require("plugins.trouble"),
 	require("plugins.overseer"),
 })
-
--- after your `require("lazy").setup({ … })`:
-vim.api.nvim_create_autocmd("BufWritePost", {
-	pattern = { "*.sh", "*.py", "*.go", "*.c", "*.cpp", "*.hpp", "*.java", "*.ts" },
-	callback = function()
-		require("overseer").run_template({ template = "run script" })
-	end,
-})
