@@ -1,4 +1,4 @@
--- ~/.config/nvim/lua/overseer/template/user/run_script.lua
+-- ~/n.config/nvim/lua/overseer/template/user/run_script.lua
 return {
 	name = "run script",
 	builder = function()
