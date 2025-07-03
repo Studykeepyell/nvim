@@ -60,4 +60,5 @@ require("lazy").setup({
 	require("plugins.cursor"),
 	require("plugins.trouble"),
 	require("plugins.overseer"),
+	require("plugins.hover"),
 })

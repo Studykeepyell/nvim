@@ -2,7 +2,7 @@ return {
 	-- Main LSP Configuration
 	{
 		"folke/neodev.nvim", -- <-- makes lua_ls "just know" about vim globals & api
-		opts = {}, -- default setup is fine
+		opts = {},     -- default setup is fine
 	},
 	{
 		"neovim/nvim-lspconfig",

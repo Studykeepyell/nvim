@@ -18,7 +18,13 @@ return {
 			cmd = {
 				"bash",
 				"-c",
-				("cd %s && g++ %s -std=c++17 -O2 -o %s && ./%s"):format(dir, file, base, base),
+				("cd %s && g++ %s -std=c++23 -O2 -I/usr/include -L/usr/lib -lsfml-graphics -lsfml-window -lsfml-system -o %s && ./%s")
+					:format(
+						dir,
+						file,
+						base,
+						base
+					),
 			}
 		elseif ft == "java" then
 			cmd = {
@@ -36,18 +42,13 @@ return {
 			cmd = cmd,
 			cwd = dir,
 			components = {
-				-- diagnostics into quickfix, but don’t auto-open it:
-				-- { "on_output_quickfix", set_diagnostics = true, open = false },
-
-				-- only the terminal split, opened after run completes:
+				-- and execution log live.
 				{
 					"open_output",
 					direction = "vertical",
-					on_start = "never",
-					on_complete = "always",
+					on_start = "always",
 					focus = false,
 				},
-
 				"on_result_diagnostics",
 				"default",
 			},

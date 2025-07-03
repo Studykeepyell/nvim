@@ -10,7 +10,7 @@ return {
 			cmd = {
 				"bash",
 				"-c",
-				string.format("cd %s && g++ %s -std=c++17 -O2 -o %s && ./%s", dir, file, base, base),
+				string.format("cd %s && g++ %s -std=c++23 -O2 -o %s && ./%s", dir, file, base, base),
 			},
 			cwd = dir,
 			components = {
