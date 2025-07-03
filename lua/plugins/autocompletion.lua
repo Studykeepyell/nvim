@@ -94,8 +94,7 @@ return { -- Autocompletion
 				--  This will expand snippets if the LSP sent a snippet.
 				["<C-y>"] = cmp.mapping.confirm({ select = true }),
 
-				-- If you prefer more traditional completion keymaps,
-				-- you can uncomment the following lines
+				-- If you prefer more traditional completion keymap				-- you can uncomment the following lines
 				--['<CR>'] = cmp.mapping.confirm { select = true },
 				--['<Tab>'] = cmp.mapping.select_next_item(),
 				--['<S-Tab>'] = cmp.mapping.select_prev_item(),
@@ -105,7 +104,9 @@ return { -- Autocompletion
 				--  completions whenever it has completion options available.
 				["<C-Tab>"] = cmp.mapping.complete({}),
 
-				-- Think of <c-l> as moving to the right of your snippet expansion.
+					
+					
+					-- Think of <c-l> as moving to the right of your snippet expansion.
 				--  So if you have a snippet that's like:
 				--  function $name($args)
 				--    $body

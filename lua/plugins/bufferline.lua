@@ -27,7 +27,7 @@ return {
 				show_buffer_close_icons = true,
 				show_close_icon = true,
 				persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
-				separator_style = { "│", "│" }, -- | "thick" | "thin" | { 'any', 'any' },
+				separator_style = "thick", -- | "thick" | "thin" | { 'any', 'any' },
 				enforce_regular_tabs = true,
 				always_show_bufferline = true,
 				show_tab_indicators = false,
@@ -42,18 +42,9 @@ return {
 				sort_by = "insert_at_end",
 			},
 			highlights = {
-				separator = {
-					fg = "#1dde0b",
-				},
-				buffer_selected = {
-					bold = true,
-					italic = false,
-				},
-				-- separator_selected = {},
-				-- tab_selected = {},
-				-- background = {},
-				-- indicator_selected = {},
-				-- fill = {},
+				separator = { fg = "#5fff87", bg = "NONE" },
+				separator_visible = { fg = "#5fff87", bg = "NONE" },
+				separator_selected = { fg = "#8affff", bg = "NONE" },
 			},
 		})
 
