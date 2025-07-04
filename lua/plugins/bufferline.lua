@@ -5,15 +5,15 @@ return {
 		"nvim-tree/nvim-web-devicons",
 	},
 	config = function()
-		require("bufferline").setup({
-			options = {
-				mode = "buffers", -- set to "tabs" to only show tabpages instead
-				themable = true, -- allows highlight groups to be overriden i.e. sets highlights as default
-				numbers = "none", -- | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
-				close_command = "Bdelete! %d", -- can be a string | function, see "Mouse actions"
-				buffer_close_icon = "✗",
-				close_icon = "✗",
-				path_components = 1, -- Show only the file name without the directory
+                require("bufferline").setup({
+                        options = {
+                                mode = "buffers", -- set to "tabs" to only show tabpages instead
+                                themable = true, -- allows highlight groups to be overriden i.e. sets highlights as default
+                                numbers = "none", -- | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
+                                close_command = "Bdelete! %d", -- can be a string | function, see "Mouse actions"
+                                buffer_close_icon = "✗",
+                                close_icon = "✗",
+                                path_components = 1, -- Show only the file name without the directory
 				modified_icon = "●",
 				left_trunc_marker = "",
 				right_trunc_marker = "",
@@ -37,16 +37,19 @@ return {
 				},
 				icon_pinned = "󰐃",
 				minimum_padding = 1,
-				maximum_padding = 5,
-				maximum_length = 15,
-				sort_by = "insert_at_end",
-			},
-			highlights = {
-				separator = { fg = "#5fff87", bg = "NONE" },
-				separator_visible = { fg = "#5fff87", bg = "NONE" },
-				separator_selected = { fg = "#8affff", bg = "NONE" },
-			},
-		})
+                                maximum_padding = 5,
+                                maximum_length = 15,
+                                sort_by = "insert_at_end",
+                                filter = function(buf)
+                                        return vim.bo[buf.id].filetype ~= "qf"
+                                end,
+                        },
+                        highlights = {
+                                separator = { fg = "#5fff87", bg = "#202328" },
+                                separator_visible = { fg = "#5fff87", bg = "#202328" },
+                                separator_selected = { fg = "#8affff", bg = "#202328" },
+                        },
+                })
 
 		-- 1) Make quickfix buffers unmodifiable & hide from buffer list:
 		vim.api.nvim_create_autocmd("FileType", {
@@ -65,13 +68,5 @@ return {
 			end,
 		})
 
-		-- 2) Update your bufferline setup to filter out qf buffers:
-		require("bufferline").setup({
-			options = {
-				filter = function(buf)
-					return vim.bo[buf.id].filetype ~= "qf"
-				end,
-			},
-		})
-	end,
+        end,
 }
