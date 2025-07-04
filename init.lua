@@ -56,9 +56,10 @@ require("lazy").setup({
 	require("plugins.alpha"),
 	require("plugins.indent-blankline"),
 	require("plugins.misc"),
-	require("plugins.ui"),
 	require("plugins.cursor"),
 	require("plugins.trouble"),
 	require("plugins.overseer"),
 	require("plugins.hover"),
+	require("plugins.numb"),
+	require("plugins.leap"),
 })
