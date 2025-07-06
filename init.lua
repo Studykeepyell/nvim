@@ -62,4 +62,5 @@ require("lazy").setup({
 	require("plugins.hover"),
 	require("plugins.numb"),
 	require("plugins.leap"),
+	require("plugins.aerial"),
 })
