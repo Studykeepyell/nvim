@@ -7,22 +7,22 @@ return {
 	},
 
 	-- null-ls for formatting & diagnostics, no cpplint
-	{
-		"jose-elias-alvarez/null-ls.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function()
-			local null_ls = require("null-ls")
-			null_ls.setup({
-				sources = {
-					null_ls.builtins.formatting.prettier,
-					null_ls.builtins.diagnostics.eslint_d,
-					null_ls.builtins.code_actions.eslint_d,
-					-- for C/C++, you could add clang_format or clang_check here
-					-- but cpplint is deliberately omitted
-				},
-			})
-		end,
-	},
+{
+  "nvimtools/none-ls.nvim",  -- ← NEW name
+  dependencies = { "nvim-lua/plenary.nvim" },
+  config = function()
+    local null_ls = require("null-ls")
+    null_ls.setup({
+      sources = {
+        null_ls.builtins.formatting.clang_format,
+        null_ls.builtins.formatting.prettier,
+        null_ls.builtins.diagnostics.eslint_d,
+        null_ls.builtins.code_actions.eslint_d,
+      },
+    })
+  end,
+},
+
 
 	-- Core LSP configuration
 	{
