@@ -9,6 +9,6 @@ return {
 
 	-- 4) pass your setup() opts directly
 	opts = {
-		templates = { "builtin", "user.run_script", "user.cpp_build" },
+		templates = { "builtin", "user.run_script", "user.cpp_build", "user.cpp_build_debug" },
 	},
 }

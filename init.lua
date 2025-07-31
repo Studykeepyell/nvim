@@ -63,4 +63,5 @@ require("lazy").setup({
 	require("plugins.numb"),
 	require("plugins.leap"),
 	require("plugins.aerial"),
+	require("plugins.dap"),
 })

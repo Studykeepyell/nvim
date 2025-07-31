@@ -70,3 +70,5 @@ end, { desc = "Next ERROR" })
 vim.keymap.set("n", "<F2>", function()
 	require("overseer").run_template({ template = "run script" })
 end, { desc = "Overseer: run script" })
+
+
