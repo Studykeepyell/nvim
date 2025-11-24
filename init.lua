@@ -42,8 +42,22 @@ require("lazy").setup({
 		},
 	},
 
+	{
+		"rebelot/kanagawa.nvim",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.opt.termguicolors = true
+			require("kanagawa").setup({
+				theme = "wave", -- "wave" | "dragon" | "lotus"
+				transparent = false, -- set true if you use a transparent UI
+				dimInactive = false,
+			})
+			vim.cmd.colorscheme("kanagawa")
+		end,
+	},
+
 	-- Lazy
-	require("plugins.colortheme"),
 	require("plugins.neotree"),
 	require("plugins.bufferline"),
 	require("plugins.lualine"),
