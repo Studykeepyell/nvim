@@ -2,7 +2,7 @@ return {
 	"nvimtools/none-ls.nvim",
 	dependencies = {
 		"nvimtools/none-ls-extras.nvim",
-		"jayp0521/mason-null-ls.nvim", -- auto-install external tools for none-ls
+		"jayp0521/mason-null-ls.nvim",
 	},
 	config = function()
 		local null_ls = require("null-ls")
@@ -10,162 +10,69 @@ return {
 		local diagnostics = null_ls.builtins.diagnostics
 		local code_actions = null_ls.builtins.code_actions
 
-		-- none-ls-extras sources
+		-- 1. IMPORT EXTRAS
 		local eslint_d_diag = require("none-ls.diagnostics.eslint_d")
 		local eslint_d_actions = require("none-ls.code_actions.eslint_d")
 		local cpplint = require("none-ls.diagnostics.cpplint")
+
+		-- Python Extras (Ruff only)
 		local ruff_d = require("none-ls.diagnostics.ruff")
 		local ruff_fmt = require("none-ls.formatting.ruff_format")
 
-		-- ----- rustfmt (custom) if builtin is missing -----
-		local methods = require("null-ls.methods")
-		local helpers = require("null-ls.helpers")
-		local rustfmt_source = formatting.rustfmt -- try builtin first (may be nil)
-		if rustfmt_source == nil then
-			rustfmt_source = {
-				name = "rustfmt",
-				method = methods.internal.FORMATTING,
-				filetypes = { "rust" },
-				generator = helpers.formatter_factory({
-					command = "rustfmt",
-					args = { "--emit=stdout" },
-					to_stdin = true,
-				}),
-			}
-		end
-
-		-- Tools to have Mason install (null-ls uses these binaries)
+		-- 2. MASON AUTO-INSTALLER (Removed unwanted tools)
 		require("mason-null-ls").setup({
 			ensure_installed = {
-				-- JS/TS
 				"prettierd",
-				"prettier",
-				"eslint_d",
-				-- Lua
-				"stylua",
-				-- Shell / misc
-				"shfmt",
-				"shellcheck",
-				"actionlint",
-				"jsonlint",
+				"eslint_d", -- JS/TS
+				"stylua", -- Lua
+				"shfmt", -- Shell formatting (kept shfmt, removed shellcheck)
+				"actionlint", -- GitHub Actions
 				"yamllint",
 				"markdownlint",
-				"htmlhint",
-				"checkmake",
-				-- Python
 				"ruff",
-				"black",
-				"mypy",
-				"pylint",
-				-- Java
-				"google-java-format",
-				-- C/C++
-				"clang-format",
-				"clang-tidy",
+				"black", -- Python
+				"google-java-format", -- Java
+				"clang-format", -- C/C++
 			},
 			automatic_installation = true,
 		})
 
-		-- Build sources (single table, used below)
+		-- 3. SOURCES
 		local sources = {
-			------------------------------------------------------------------------
-			-- JavaScript / TypeScript
-			------------------------------------------------------------------------
+			-- JS/TS
 			formatting.prettierd.with({
-				filetypes = {
-					"javascript",
-					"javascriptreact",
-					"typescript",
-					"typescriptreact",
-					"json",
-					"jsonc",
-					"css",
-					"scss",
-					"less",
-					"html",
-					"markdown",
-					"markdown.mdx",
-					"yaml",
-				},
+				filetypes = { "javascript", "typescript", "json", "yaml", "html", "css", "markdown" },
 			}),
-			eslint_d_diag.with({
-				condition = function(utils)
-					return utils.root_has_file({
-						".eslintrc",
-						".eslintrc.js",
-						".eslintrc.cjs",
-						".eslintrc.json",
-						"eslint.config.js",
-						"eslint.config.mjs",
-						"eslint.config.cjs",
-					})
-				end,
-			}),
-			eslint_d_actions.with({
-				condition = function(utils)
-					return utils.root_has_file({
-						".eslintrc",
-						".eslintrc.js",
-						".eslintrc.cjs",
-						".eslintrc.json",
-						"eslint.config.js",
-						"eslint.config.mjs",
-						"eslint.config.cjs",
-					})
-				end,
-			}),
+			eslint_d_diag,
+			eslint_d_actions,
 
-			------------------------------------------------------------------------
 			-- Python
-			------------------------------------------------------------------------
-			ruff_d.with({}),
+			ruff_d,
 			ruff_fmt,
-			formatting.black.with({
-				condition = function(utils)
-					return not utils.root_has_file({ "pyproject.toml" })
-				end,
-			}),
-			diagnostics.mypy,
-			diagnostics.pylint,
+			formatting.black,
 
-			------------------------------------------------------------------------
-			-- Rust
-			------------------------------------------------------------------------
-			rustfmt_source, -- custom-safe rustfmt
-
-			------------------------------------------------------------------------
 			-- Java
-			------------------------------------------------------------------------
 			formatting.google_java_format,
 
-			------------------------------------------------------------------------
-			-- C / C++
-			------------------------------------------------------------------------
+			-- C/C++
 			formatting.clang_format,
-			diagnostics.clang_check,
-			diagnostics.clang_tidy,
 			cpplint.with({ args = { "--filter=-legal/copyright", "$FILENAME" } }),
 
-			------------------------------------------------------------------------
-			-- Lua / Shell / Infra / Docs
-			------------------------------------------------------------------------
+			-- Lua / Misc
 			formatting.stylua,
 			formatting.shfmt.with({ args = { "-i", "4" } }),
-			diagnostics.shellcheck,
 			diagnostics.actionlint,
 			diagnostics.yamllint,
 			diagnostics.markdownlint,
-			diagnostics.jsonlint,
-			diagnostics.checkmake,
 			formatting.terraform_fmt,
 		}
 
+		-- 4. SETUP & FORMATTING ON SAVE
 		local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
 		null_ls.setup({
-			sources = sources, -- ← use the single table
+			sources = sources,
 			on_attach = function(client, bufnr)
-				-- Only use null-ls for formatting to avoid conflicts with LSPs
 				if client.supports_method("textDocument/formatting") then
 					vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
 					vim.api.nvim_create_autocmd("BufWritePre", {
@@ -174,7 +81,6 @@ return {
 						callback = function()
 							vim.lsp.buf.format({
 								async = false,
-								timeout_ms = 2000,
 								filter = function(c)
 									return c.name == "null-ls"
 								end,
@@ -185,20 +91,6 @@ return {
 			end,
 		})
 
-		-- Diagnostic UI (your style)
-		vim.diagnostic.config({
-			virtual_text = { prefix = "●", spacing = 2, source = "always" },
-			signs = true,
-			underline = true,
-			update_in_insert = false,
-			severity_sort = true,
-		})
-
-		-- Hover float on hold
-		vim.o.updatetime = 20000
-		vim.cmd([[
-      autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false, border = "rounded", source = "always" })
-    ]])
+		vim.diagnostic.config({ virtual_text = { prefix = "●", source = "always" } })
 	end,
 }
-

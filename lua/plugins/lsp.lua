@@ -7,22 +7,21 @@ return {
 	},
 
 	-- null-ls for formatting & diagnostics, no cpplint
-{
-  "nvimtools/none-ls.nvim",  -- ← NEW name
-  dependencies = { "nvim-lua/plenary.nvim" },
-  config = function()
-    local null_ls = require("null-ls")
-    null_ls.setup({
-      sources = {
-        null_ls.builtins.formatting.clang_format,
-        null_ls.builtins.formatting.prettier,
-        null_ls.builtins.diagnostics.eslint_d,
-        null_ls.builtins.code_actions.eslint_d,
-      },
-    })
-  end,
-},
-
+	{
+		"nvimtools/none-ls.nvim", -- ← NEW name
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			local null_ls = require("null-ls")
+			null_ls.setup({
+				sources = {
+					null_ls.builtins.formatting.clang_format,
+					null_ls.builtins.formatting.prettier,
+					null_ls.builtins.diagnostics.eslint_d,
+					null_ls.builtins.code_actions.eslint_d,
+				},
+			})
+		end,
+	},
 
 	-- Core LSP configuration
 	{
@@ -102,18 +101,25 @@ return {
 					capabilities = { documentFormattingProvider = false, documentRangeFormattingProvider = false },
 				},
 				ruff = {},
-				pylsp = {
+				pyright = {
 					settings = {
-						pylsp = {
-							plugins = {
-								pyflakes = { enabled = false },
-								pycodestyle = { enabled = false },
-								autopep8 = { enabled = false },
-								yapf = { enabled = false },
-								mccabe = { enabled = false },
-								pylsp_mypy = { enabled = false },
-								pylsp_black = { enabled = false },
-								pylsp_isort = { enabled = false },
+						python = {
+							analysis = {
+								-- "openFilesOnly" is faster for large projects, "workspace" is better for refactoring
+								diagnosticMode = "workspace",
+
+								-- CRITICAL for ML: Tells Pyright to analyze libraries (TF, Torch, etc.)
+								-- even if they don't have perfect type stubs.
+								useLibraryCodeForTypes = true,
+
+								-- Helps find standard library and venv paths
+								autoSearchPaths = true,
+
+								-- "basic" is best for ML. "strict" will scream errors at untyped TF code.
+								typeCheckingMode = "basic",
+
+								-- Enables the "add import" feature you asked for
+								autoImportCompletions = true,
 							},
 						},
 					},
@@ -146,6 +152,9 @@ return {
 					"clang-format",
 					"stylua",
 					"typescript-language-server",
+					"shellcheck",
+					"jsonlint",
+					"rustfmt",
 				},
 			})
 

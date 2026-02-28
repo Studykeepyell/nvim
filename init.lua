@@ -14,34 +14,8 @@ local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
---
---  To check the current status of your plugins, run
---    :Lazy
---
---  You can press `?` in this menu for help. Use `:q` to close the window
---
---  To update plugins you can run
---    :Lazy update
---
--- NOTE: Here is where you install your plugins.
 require("lazy").setup({
-	{
-		"nvim-neo-tree/neo-tree.nvim",
-		branch = "v3.x",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-			"MunifTanjim/nui.nvim",
-			-- {"3rd/image.nvim", opts = {}}, -- Optional image support in preview window: See `# Preview Mode` for more information
-		},
-		lazy = false, -- neo-tree will lazily load itself
-		---@module "neo-tree"
-		---@type neotree.Config?
-		opts = {
-			-- fill any relevant options here
-		},
-	},
-
+	-- 1. Kanagawa Theme (Keep this here if you want, or move to plugins/kanagawa.lua)
 	{
 		"rebelot/kanagawa.nvim",
 		lazy = false,
@@ -49,16 +23,16 @@ require("lazy").setup({
 		config = function()
 			vim.opt.termguicolors = true
 			require("kanagawa").setup({
-				theme = "wave", -- "wave" | "dragon" | "lotus"
-				transparent = false, -- set true if you use a transparent UI
+				theme = "wave",
+				transparent = false,
 				dimInactive = false,
 			})
 			vim.cmd.colorscheme("kanagawa")
 		end,
 	},
 
-	-- Lazy
-	require("plugins.neotree"),
+	-- 2. Load all plugins from separate files
+	require("plugins.neotree"), -- <--- RESTORE THIS LINE
 	require("plugins.bufferline"),
 	require("plugins.lualine"),
 	require("plugins.treesitter"),
@@ -78,4 +52,15 @@ require("lazy").setup({
 	require("plugins.leap"),
 	require("plugins.aerial"),
 	require("plugins.dap"),
+})
+
+-- [[ Post-Load Configuration ]]
+-- Enable inlay hints for the current buffer
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(args)
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		if client and client.server_capabilities.inlayHintProvider then
+			vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+		end
+	end,
 })
