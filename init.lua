@@ -52,6 +52,7 @@ require("lazy").setup({
 	require("plugins.leap"),
 	require("plugins.aerial"),
 	require("plugins.dap"),
+	require("plugins.lspsaga"),
 })
 
 -- [[ Post-Load Configuration ]]
