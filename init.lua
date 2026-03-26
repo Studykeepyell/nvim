@@ -65,3 +65,38 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		end
 	end,
 })
+
+local function create_cpp_class(name)
+	local header = name .. ".h"
+	local source = name .. ".cpp"
+
+	-- Create Header file with include guards
+	local header_content = {
+		"#pragma once",
+		"",
+		"class " .. name .. " {",
+		"public:",
+		"    " .. name .. "();",
+		"    ~" .. name .. "();",
+		"};",
+	}
+	vim.fn.writefile(header_content, header)
+
+	-- Create Source file with include
+	local source_content = {
+		'#include "' .. header .. '"',
+		"",
+		name .. "::" .. name .. "() {}",
+		"",
+		name .. "::~" .. name .. "() {}",
+	}
+	vim.fn.writefile(source_content, source)
+
+	-- Open the header file to start working
+	vim.cmd("edit " .. header)
+end
+
+-- Create a user command :NewClass <Name>
+vim.api.nvim_create_user_command("NewClass", function(opts)
+	create_cpp_class(opts.args)
+end, { nargs = 1 })
